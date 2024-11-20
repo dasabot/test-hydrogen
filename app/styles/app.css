@@ -414,15 +414,34 @@ button.reset:hover:not(:has(> *)) {
   margin-top: 0;
 }
 
-.product-image img {
-  height: auto;
+.product-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
+  max-width: 600px;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .product-main {
   align-self: start;
   position: sticky;
   top: 6rem;
+}
+
+.product-description {
+  margin-top: 18px;
 }
 
 .product-price-on-sale {
@@ -442,6 +461,33 @@ button.reset:hover:not(:has(> *)) {
 
 .product-options-item {
   padding: 0.25rem 0.5rem;
+}
+
+.breadcrumbs {
+  list-style: none;
+  font-size: 12px;
+  margin-bottom: 10px;
+  display: none;
+}
+
+.breadcrumbs-item {
+  display: inline-block;
+
+  & + .breadcrumbs-item::before {
+    content: '/';
+    font-size: 20px;
+    font-weight: 400;
+    margin: 0 5px;
+  }
+}
+
+.breadcrumbs-link {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 /*

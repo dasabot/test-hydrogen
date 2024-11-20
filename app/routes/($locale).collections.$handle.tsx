@@ -77,18 +77,6 @@ export default function Collection() {
     <div className="collection">
       <h1>{collection.title}</h1>
       <p className="collection-description">{collection.description}</p>
-      <PaginatedResourceSection
-        connection={collection.products}
-        resourcesClassName="products-grid"
-      >
-        {({node: product, index}) => (
-          <ProductItem
-            key={product.id}
-            product={product}
-            loading={index < 8 ? 'eager' : undefined}
-          />
-        )}
-      </PaginatedResourceSection>
       <Analytics.CollectionView
         data={{
           collection: {
@@ -169,6 +157,39 @@ const PRODUCT_ITEM_FRAGMENT = `#graphql
   }
 ` as const;
 
+export const COLLECTION_FRAGMENT = `#graphql
+fragment Collection on Collection {
+  id
+  handle
+  seo {
+    title
+    description
+  }
+  title
+  description
+  descriptionHtml
+  products(first: 25) {
+    nodes {
+      ...ProductItem
+    }
+  }
+  image {
+    url
+    altText
+    width
+    height
+  }
+  collection:metafield(namespace:"custom",key:"collection") {
+    reference {
+      ... on Collection {
+        id
+        handle
+      }
+    }
+  }
+}
+${PRODUCT_ITEM_FRAGMENT}` as const;
+
 // NOTE: https://shopify.dev/docs/api/storefront/2022-04/objects/collection
 const COLLECTION_QUERY = `#graphql
   ${PRODUCT_ITEM_FRAGMENT}
@@ -182,26 +203,8 @@ const COLLECTION_QUERY = `#graphql
     $endCursor: String
   ) @inContext(country: $country, language: $language) {
     collection(handle: $handle) {
-      id
-      handle
-      title
-      description
-      products(
-        first: $first,
-        last: $last,
-        before: $startCursor,
-        after: $endCursor
-      ) {
-        nodes {
-          ...ProductItem
-        }
-        pageInfo {
-          hasPreviousPage
-          hasNextPage
-          endCursor
-          startCursor
-        }
-      }
+      ...on Collection
     }
   }
+  ${COLLECTION_FRAGMENT}
 ` as const;

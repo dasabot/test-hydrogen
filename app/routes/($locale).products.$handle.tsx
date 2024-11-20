@@ -46,7 +46,6 @@ async function loadCriticalData({
     storefront.query(PRODUCT_QUERY, {
       variables: {
         handle,
-
         selectedOptions: getSelectedProductOptions(request),
       },
     }),
